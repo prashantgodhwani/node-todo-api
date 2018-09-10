@@ -100,3 +100,30 @@ describe('/GET todos/:id', () => {
                 .end(done);
     });
 });
+
+
+describe('/DELETE todos/:id', () => {
+  it('should delete element with id', (done) => {
+      request(app)
+            .delete(`/todos/${todos[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.todo._id).toBe(todos[0]._id.toHexString());
+            })
+            .end(done);
+  });
+
+  it('should return a 404 if todo not found', (done) => {
+      request(app)
+            .delete('/todos/5b95e020cc81ed3b94ef0cdf')
+            .expect(404)
+            .end(done);
+  });
+
+  it('should return a 404 if ObjectID is Invalid', (done) => {
+      request(app)
+            .delete('/todos/5b95e020cc')
+            .expect(404)
+            .end(done);
+  });
+});
