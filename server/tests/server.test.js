@@ -8,7 +8,9 @@ const {Todo} = require('./../models/todo');
 const todos = [
   {
     _id : new ObjectID(),
-    text : "First test todo"
+    text : "First test todo",
+    completed : true,
+    completed_at : 333
   },
   {
     _id : new ObjectID(),
@@ -134,4 +136,38 @@ describe('/DELETE todos/:id', () => {
             .expect(404)
             .end(done);
   });
+});
+
+describe('/PATCH /todos/:id', () => {
+    it('should update the todo by id', (done) => {
+      var id = todos[1]._id.toHexString();
+      var obj = {'text' : 'Updated todo', 'completed' : true};
+          request(app)
+                 .patch(`/todos/${id}`)
+                 .send(obj)
+                 .expect(200)
+                 .expect((res) => {
+                   expect(res.body.todo.text).toBe(obj.text);
+                   expect(res.body.todo.completed).toBe(obj.completed);
+                   expect(typeof res.body.todo.completed_at).toBe('number');
+
+
+
+
+                 })
+                 .end(done);
+    });
+    it('should set the completed_at to false when todo is not completed', (done) => {
+      var id = todos[0]._id.toHexString();
+        request(app)
+               .patch(`/todos/${id}`)
+               .send({'completed' : false})
+               .expect(200)
+               .expect((res) => {
+                 expect(res.body.todo.completed).toBe(false);
+                 expect(res.body.todo.completed_at).toBeFalsy;
+               })
+               .end(done);
+    });
+
 });
