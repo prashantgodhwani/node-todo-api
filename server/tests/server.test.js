@@ -165,7 +165,7 @@ describe('/PATCH /todos/:id', () => {
                .expect(200)
                .expect((res) => {
                  expect(res.body.todo.completed).toBe(false);
-                 expect(res.body.todo.completed_at).toBeFalsy;
+                 expect(res.body.todo.completed_at).toBeFalsy();
                })
                .end(done);
     });
